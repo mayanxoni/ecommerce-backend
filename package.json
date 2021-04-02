@@ -1,20 +1,30 @@
 {
-  "name": "ecommerce-backend",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mayanxoni/ecommerce-backend.git"
-  },
-  "keywords": [],
-  "author": "Mayank Soni",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/mayanxoni/ecommerce-backend/issues"
-  },
-  "homepage": "https://github.com/mayanxoni/ecommerce-backend#readme"
+	"name": "ecommerce-backend",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "node index.js",
+		"dev": "nodemon index.js",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mayanxoni/ecommerce-backend.git"
+	},
+	"keywords": [],
+	"author": "Mayank Soni",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/mayanxoni/ecommerce-backend/issues"
+	},
+	"homepage": "https://github.com/mayanxoni/ecommerce-backend#readme",
+	"dependencies": {
+		"bcryptjs": "^2.4.3",
+		"express": "^4.17.1",
+		"express-session": "^1.17.1",
+		"mongoose": "^5.12.3",
+		"passport": "^0.4.1",
+		"passport-local": "^1.0.0"
+	}
 }
