@@ -14,6 +14,7 @@ app.use(express.urlencoded({
 }));
 
 // Routes
+app.use('/api/landing', require('./api/routes/landing.route'));
 app.use('/api/user', require('./api/routes/user.route'));
 
 app.listen(PORT, console.log(`App running on URL: http://localhost:${PORT}`));
