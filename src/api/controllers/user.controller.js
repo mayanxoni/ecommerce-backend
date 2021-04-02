@@ -3,6 +3,8 @@ const bcrypt = require('bcryptjs');
 
 const emailRegEx = /^[a-zA-Z]+@[a-zA-Z]+\.[a-zA-Z]+$/i;
 
+exports.login = (req, res) => {  }
+
 exports.register = (req, res) => {
 	const { name, email, phone, password, confirm_password } = req.body;
 	const validateEmail = emailRegEx.test(email);
