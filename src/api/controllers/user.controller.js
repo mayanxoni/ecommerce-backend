@@ -4,10 +4,11 @@ const passport = require('passport');
 
 const emailRegEx = /^[a-zA-Z]+@[a-zA-Z]+\.[a-zA-Z]+$/i;
 
+// Login method
 exports.login = (req, res, next) => {
 	const { email, password } = req.body;
 	const validateEmail = emailRegEx.test(email);
-	
+
 	if (!email || !password) {
 		return res.status(400).json({
 			message: 'All the fields are required!'
@@ -33,7 +34,7 @@ exports.login = (req, res, next) => {
 			});
 		}
 
-		req.logIn(user, function(error) {
+		req.logIn(user, function (error) {
 			if (error) {
 				return res.status(400).json({
 					message: error
@@ -47,10 +48,11 @@ exports.login = (req, res, next) => {
 	})(req, res, next);
 }
 
+// POST a new user
 exports.register = (req, res) => {
 	const { name, email, phone, password, confirm_password } = req.body;
 	const validateEmail = emailRegEx.test(email);
-	
+
 	if (!name || !email || !phone || !password || !confirm_password) {
 		return res.status(400).json({
 			message: 'All the fields are required!'
@@ -114,5 +116,74 @@ exports.register = (req, res) => {
 		}
 	}).catch((error) => {
 		console.error(error);
+	});
+}
+
+// PUT updated details of a user
+exports.update = (req, res) => {
+	const id = req.params.id;
+	const newDetails = req.body;
+	const options = { new: true };
+
+	if (newDetails.email) {
+		return res.status(400).json({
+			message: 'Sorry, you can\'t change your email address!'
+		});
+	}
+
+	UserModel.findByIdAndUpdate(id, newDetails, options)
+	.then((response) => {
+		if (response) {
+			return res.status(200).json({
+				message: 'User details updated successfully!'
+			});
+		} else {
+			return res.status(400).json({
+				message: 'Failed to update user details!'
+			});
+		}
+	})
+	.catch((error) => {
+		return res.status(400).json({
+			error
+		});
+	});
+}
+
+// DELETE a user
+exports.delete = (req, res) => {
+	const id = req.params.id;
+	UserModel.findByIdAndDelete(id)
+	.then((response) => {
+		if (response) {
+			return res.status(200).json({
+				message: 'User deleted successfully!'
+			});
+		} else {
+			return res.status(404).json({
+				message: 'User does not exist!'
+			});
+		}
+	})
+	.catch((error) => {
+		return res.status(400).json({
+			message: error
+		});
+	});
+}
+
+// GET details of a user
+exports.get = (req, res) => {
+	const id = req.params.id;
+	UserModel.findById(id)
+	.then((response) => {
+		return res.status(200).json({
+			response
+		});
+	})
+	.catch((error) => {
+		return res.status(400).json({
+			message: error
+		});
 	});
 }

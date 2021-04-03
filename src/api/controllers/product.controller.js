@@ -1,5 +1,6 @@
 const ProductModel = require('../models/product.model');
 
+// GET all the products
 exports.index = (req, res) => {
 	if (req.query.id) {
 		const id = req.query.id;
@@ -37,6 +38,7 @@ exports.index = (req, res) => {
 	}
 }
 
+// POST a new product
 exports.newProduct = (req, res) => {
 	const { name, image, description, price, featured } = req.body;
 
@@ -63,6 +65,54 @@ exports.newProduct = (req, res) => {
 	.catch((error) => {
 		return res.status(400).json({
 			message: error
+		});
+	});
+}
+
+// PUT updated details of a product
+exports.updateProduct = (req, res) => {
+	const id = req.params.id;
+	const newDetails = req.body;
+	const options = { new: true };
+
+	ProductModel.findByIdAndUpdate(id, newDetails, options)
+	.then((response) => {
+		if (response) {
+			return res.status(200).json({
+				message: response
+			});
+		} else {
+			return res.status(404).json({
+				message: 'Product not found!'
+			});
+		}
+	})
+	.catch((error) => {
+		return res.status(400).json({
+			error
+		});
+	});
+}
+
+// DELETE a product
+exports.deleteProduct = (req, res) => {
+	const id = req.params.id;
+
+	ProductModel.findByIdAndDelete(id)
+	.then((response) => {
+		if (response) {
+			return res.status(200).json({
+				message: 'Product deleted successfully!'
+			});
+		} else {
+			return res.status(404).json({
+				message: 'Product does not exist!'
+			});
+		}
+	})
+	.catch((error) => {
+		return res.status(400).json({
+			error
 		});
 	});
 }
