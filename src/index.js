@@ -8,6 +8,9 @@ const passport = require('passport');
 const PORT = process.env.PORT || 3000;
 const app = express();
 
+// Auth middleware
+require('./api/middlewares/auth.middleware')(passport);
+
 // Passport config
 require('./api/config/passport.config')(passport);
 
@@ -31,9 +34,9 @@ app.use(flash());
 
 // Set flash messages
 app.use((req, res, next) => {
-	res.locals.success_msg=req.flash('success_msg');
-	res.locals.error_msg=req.flash('error_msg');
-	res.locals.error=req.flash('error');
+	res.locals.success_msg = req.flash('success_msg');
+	res.locals.error_msg = req.flash('error_msg');
+	res.locals.error = req.flash('error');
 	next();
 });
 

@@ -6,9 +6,11 @@ const connectDB = () => {
 		useUnifiedTopology: true,
 		useFindAndModify: false,
 		useCreateIndex: true
-	}).then((success) => {
+	})
+	.then((success) => {
 		console.log(`MongoDB connected to cluster: ${success.connection.host}`);
-	}).catch((error) => {
+	})
+	.catch((error) => {
 		console.error(`MongoDB connection failed! ${error}`);
 	});
 }
