@@ -1,11 +1,12 @@
 const express = require('express');
-const router = express.Router();
+const route = express.Router();
 const LandingController = require('../controllers/landing.controller');
 
 /**
  * 		@description	Route for landing page
  * 		@method			GET /api/
  */
-router.get('/', LandingController.index);
+route.get('/1', LandingController.index1);
+route.get('/2', LandingController.index2);
 
-module.exports = router;
+module.exports = route;
