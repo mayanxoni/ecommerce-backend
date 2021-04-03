@@ -44,5 +44,6 @@ app.use(passport.session());
 // Routes
 app.use('/api/landing', require('./api/routes/landing.route'));
 app.use('/api/user', require('./api/routes/user.route'));
+app.use('/api/products', require('./api/routes/product.route'));
 
 app.listen(PORT, console.log(`Server running on URL: http://localhost:${PORT}`));
