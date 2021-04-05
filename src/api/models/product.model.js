@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
+	sku_id: {
+		type: String,
+		required: true
+	},
 	name: {
 		type: String,
 		required: true
@@ -24,6 +28,14 @@ const productSchema = new mongoose.Schema({
 	created_at: {
 		type: Date,
 		default: Date.now
+	}
+});
+
+productSchema.set('toJSON', {
+	virtuals: true,
+	versionKey: false,
+	transform: (doc, ret) => {
+		delete ret._id
 	}
 });
 

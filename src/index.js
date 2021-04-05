@@ -17,6 +17,9 @@ require('./api/config/passport.config')(passport);
 // Connect MongoDB
 connectDB();
 
+// Seed products collection
+// require('../seedData');
+
 // Bodyparser
 app.use(express.urlencoded({
 	extended: false
