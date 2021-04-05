@@ -17,9 +17,6 @@ require('./api/config/passport.config')(passport);
 // Connect MongoDB
 connectDB();
 
-// Seed products collection
-// require('../seedData');
-
 // Bodyparser
 app.use(express.urlencoded({
 	extended: false
@@ -51,5 +48,6 @@ app.use(passport.session());
 app.use('/api/landing', require('./api/routes/landing.route'));
 app.use('/api/user', require('./api/routes/user.route'));
 app.use('/api/products', require('./api/routes/product.route'));
+app.use('/api/wishlist', require('./api/routes/wishlist.route'));
 
 app.listen(PORT, console.log(`Server running on URL: http://localhost:${PORT}`));
