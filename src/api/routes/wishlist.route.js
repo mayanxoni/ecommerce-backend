@@ -8,7 +8,7 @@ const WishlistController = require('../controllers/wishlist.controller');
  * @method			GET /wishlist
  * @param			'id'
  */
-route.get('/:id', WishlistController.get);
+route.get('/', WishlistController.get);
 
 
 /**

@@ -38,7 +38,6 @@ route.delete('/:id', ProductController.deleteProduct);
 /**
  * @description		Seed products collection with more documents
  * @method			GET /products/seed
- * @param			'id'
  */
 route.get('/seed', ProductController.seed);
 
