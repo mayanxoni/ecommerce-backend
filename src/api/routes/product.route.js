@@ -13,10 +13,10 @@ route.get('/', ProductController.index);
 
 /**
  * @description		Add a new product
- * @method			POST /products/new
+ * @method			POST /products
  * @param			'name', 'image', 'description', 'price', 'featured'
  */
-route.post('/new', ProductController.newProduct);
+route.post('/', ProductController.newProduct);
 
 
 /**
@@ -33,5 +33,13 @@ route.put('/:id', ProductController.updateProduct);
  * @param			'id'
  */
 route.delete('/:id', ProductController.deleteProduct);
+
+
+/**
+ * @description		Seed products collection with more documents
+ * @method			GET /products/seed
+ * @param			'id'
+ */
+route.get('/seed', ProductController.seed);
 
 module.exports = route;
