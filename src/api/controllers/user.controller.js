@@ -5,7 +5,7 @@ const passport = require('passport');
 const emailRegEx = /^[a-zA-Z]+@[a-zA-Z]+\.[a-zA-Z]+$/i;
 
 // Login method
-exports.login = (req, res, next) => {
+exports.signin = (req, res, next) => {
 	const { email, password } = req.body;
 	const validateEmail = emailRegEx.test(email);
 
@@ -50,7 +50,7 @@ exports.login = (req, res, next) => {
 }
 
 // POST a new user
-exports.register = (req, res) => {
+exports.signup = (req, res) => {
 	// const { name, email, phone, password, confirm_password } = req.body;
 	const { name, email, phone, password } = req.body;
 	const validateEmail = emailRegEx.test(email);
