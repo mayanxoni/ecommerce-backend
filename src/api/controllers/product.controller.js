@@ -80,7 +80,8 @@ exports.updateProduct = (req, res) => {
 		.then((response) => {
 			if (response) {
 				return res.status(200).json({
-					message: response
+					message: 'Product updated successfully',
+					product: response
 				});
 			} else {
 				return res.status(404).json({
