@@ -104,7 +104,8 @@ exports.register = (req, res) => {
 							.then((user) => {
 								req.flash('success_msg', 'You are now registered!');
 								return res.status(200).json({
-									message: 'New user added!'
+									message: 'New user added!',
+									user
 								});
 							})
 							.catch((error) => {
