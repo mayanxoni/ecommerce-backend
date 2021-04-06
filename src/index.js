@@ -4,9 +4,12 @@ const connectDB = require('./api/config/db.config');
 const flash = require('connect-flash');
 const session = require('express-session');
 const passport = require('passport');
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 const app = express();
+
 
 // Auth middleware
 require('./api/middlewares/auth.middleware')(passport);
@@ -43,6 +46,12 @@ app.use((req, res, next) => {
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Cookie Parser
+app.use(cookieParser());
+
+// CORS
+app.use(cors());
 
 // Routes
 app.use('/api/landing', require('./api/routes/landing.route'));

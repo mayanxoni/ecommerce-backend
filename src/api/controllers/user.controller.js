@@ -51,10 +51,12 @@ exports.login = (req, res, next) => {
 
 // POST a new user
 exports.register = (req, res) => {
-	const { name, email, phone, password, confirm_password } = req.body;
+	// const { name, email, phone, password, confirm_password } = req.body;
+	const { name, email, phone, password } = req.body;
 	const validateEmail = emailRegEx.test(email);
 
-	if (!name || !email || !phone || !password || !confirm_password) {
+	// if (!name || !email || !phone || !password || !confirm_password) {
+	if (!name || !email || !password) {
 		return res.status(400).json({
 			message: 'All the fields are required!'
 		});
@@ -72,11 +74,11 @@ exports.register = (req, res) => {
 		})
 	}
 
-	if (password != confirm_password) {
+	/* if (password != confirm_password) {
 		return res.status(400).json({
 			message: 'Passwords don\'t match'
 		});
-	}
+	} */
 
 	UserModel.findOne({ email })
 		.then((user) => {
@@ -88,7 +90,6 @@ exports.register = (req, res) => {
 				const newUser = new UserModel({
 					name,
 					email,
-					phone,
 					password
 				});
 
