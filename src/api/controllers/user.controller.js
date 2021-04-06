@@ -135,6 +135,12 @@ exports.update = (req, res) => {
 		});
 	}
 
+	if (newDetails.password) {
+		return res.status(400).json({
+			message: 'Sorry, you can\'t change your password!'
+		});
+	}
+
 	UserModel.findByIdAndUpdate(id, newDetails, options)
 		.then((response) => {
 			if (response) {
