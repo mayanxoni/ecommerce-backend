@@ -8,7 +8,7 @@ const UserController = require('../controllers/user.controller');
  * @method			POST /user/login
  * @param			'email', 'password'
  */
-route.post('/login', UserController.login);
+route.post('/signin', UserController.login);
 
 
 /**
@@ -16,7 +16,7 @@ route.post('/login', UserController.login);
  * @method			POST /user/register
  * @param			'email', 'name', 'phone', 'password', 'confirm_password'
  */
-route.post('/register', UserController.register);
+route.post('/signup', UserController.register);
 
 
 /**
