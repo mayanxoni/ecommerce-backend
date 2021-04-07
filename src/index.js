@@ -21,7 +21,7 @@ app.use(cors());
 // Routes
 app.use('/api/landing', require('./api/routes/landing.route'));
 app.use('/api/user', require('./api/routes/user.route'));
-app.use('/api/products', authMiddleware, require('./api/routes/product.route'));
+app.use('/api/products', require('./api/routes/product.route'));
 app.use('/api/wishlist', authMiddleware,  require('./api/routes/wishlist.route'));
 
 app.listen(PORT, console.log(`Server running on URL: http://localhost:${PORT}`));
