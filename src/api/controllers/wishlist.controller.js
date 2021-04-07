@@ -1,4 +1,5 @@
 const WishlistModel = require('../models/wishlist.model')
+const ObjectId = require('mongodb').ObjectId;
 
 
 // GET wishlist created by a user
@@ -6,17 +7,20 @@ exports.get = (req, res) => {
 	if (req.query.id) {
 		const id = req.query.id;
 		WishlistModel.findById(id)
-			.then((data) => {
-				if (!data) {
-					return res.status(404).send({
+			.then((list) => {
+				if (!list) {
+					return res.status(404).json({
 						message: 'Sorry, wishlist not found!'
 					});
 				} else {
-					return res.send(data);
+					return res.status(200).json({
+						message: 'Wishlist found!',
+						list
+					});
 				}
 			})
 			.catch(() => {
-				return res.status(404).send({
+				return res.status(404).json({
 					message: 'This wishlist does not exist!'
 				});
 			});
@@ -40,32 +44,77 @@ exports.get = (req, res) => {
 }
 
 
-// POST a new wishlist
-exports.new = (req, res) => {
-	const id = req.body.id;
-	const productIds = req.body.productIds;
-	const wishlist = new WishlistModel({
-		_id: id,
-		products: [{
-			_id: productIds
-		}]
-	});
-	/* const wishlist = new WishlistModel({
-		_id: "606ac1c1c05e9014f1ea6bf4",
-		products: [{
-			_id: "606ab55ec4510b0f02adaaaa"
-		}]
-	}); */
-	wishlist.save()
+// PUT product in a wishlist
+exports.update = (req, res) => {
+	const wishlistId = req.params.id;
+	const productId = new ObjectId(req.body.productId);
+	const ordered = req.body.ordered;
+
+	const addProduct = {
+		$push: {
+			products: {
+				_id: productId,
+				ordered: ordered ?? false
+			}
+		}
+	};
+
+	const removeProduct = {
+		$pull: {
+			products: {
+				_id: productId,
+			}
+		}
+	};
+
+	const options = {
+		new: true,
+		safe: true,
+		upsert: true
+	};
+
+	const getProduct = {
+		products: {
+			$elemMatch: {
+				_id: productId
+			}
+		}
+	};
+
+	WishlistModel.find(getProduct)
 		.then((list) => {
-			return res.status(200).json({
-				message: 'Wishlist created!',
-				list
-			});
+			if (list.length) {
+				// Remove product if it exists in the wishlist
+				updateWishlist(wishlistId, removeProduct, options);
+			} else {
+				// Add product if it doesn't exist in the wishlist
+				updateWishlist(wishlistId, addProduct, options);
+			}
 		})
 		.catch((error) => {
 			return res.status(400).json({
-				message: error
+				error
 			});
 		});
+
+	function updateWishlist(id, productParams, options) {
+		WishlistModel.findByIdAndUpdate(id, productParams, options)
+			.then((list) => {
+				if (list) {
+					return res.status(200).json({
+						message: 'Operation succeeded!',
+						list
+					});
+				} else {
+					return res.status(400).json({
+						message: 'Operation failed!'
+					});
+				}
+			})
+			.catch((error) => {
+				return res.status(400).json({
+					error
+				});
+			});
+	}
 }

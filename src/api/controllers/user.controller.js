@@ -1,6 +1,8 @@
 const UserModel = require('../models/user.model');
+const WishlistModel = require('../models/wishlist.model');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
+const { deleteOne } = require('../models/wishlist.model');
 
 const emailRegEx = /^[a-zA-Z]+@[a-zA-Z]+\.[a-zA-Z]+$/i;
 
@@ -104,6 +106,13 @@ exports.register = (req, res) => {
 						newUser.save()
 							.then((user) => {
 								req.flash('success_msg', 'You are now registered!');
+
+								// Create new wishlist for user upon signup
+								const wishlist = new WishlistModel({
+									_id: user.id,
+									products: []
+								});
+								wishlist.save();
 								return res.status(200).json({
 									message: 'New user added!',
 									user
@@ -167,8 +176,18 @@ exports.delete = (req, res) => {
 	UserModel.findByIdAndDelete(id)
 		.then((response) => {
 			if (response) {
-				return res.status(200).json({
-					message: 'User deleted successfully!'
+				
+				// Delete the wishlist along with the user
+				WishlistModel.findByIdAndDelete(id, (error, deleted) => {
+					if (error) {
+						return res.status(400).json({
+							message: 'User could not be deleted!'
+						});
+					} else {
+						return res.status(200).json({
+							message: 'User deleted successfully!'
+						});
+					}
 				});
 			} else {
 				return res.status(404).json({

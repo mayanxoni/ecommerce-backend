@@ -13,9 +13,9 @@ route.get('/', WishlistController.get);
 
 /**
  * @description		Create a wishlist
- * @method			POST /wishlist
- * @param			'id', 'productIds[]'
+ * @method			POST /wishlist/id
+ * @param			'id', 'productId'
  */
-route.post('/', WishlistController.new);
+route.put('/:id', WishlistController.update);
 
 module.exports = route;
