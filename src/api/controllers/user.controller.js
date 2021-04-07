@@ -1,8 +1,7 @@
 const UserModel = require('../models/user.model');
 const WishlistModel = require('../models/wishlist.model');
 const bcrypt = require('bcryptjs');
-const passport = require('passport');
-const { deleteOne } = require('../models/wishlist.model');
+const jwt = require('jsonwebtoken');
 
 const emailRegEx = /^[a-zA-Z]+@[a-zA-Z]+\.[a-zA-Z]+$/i;
 
@@ -23,32 +22,50 @@ exports.login = (req, res, next) => {
 		});
 	}
 
-	passport.authenticate('local', (error, user, info) => {
-		if (error) {
-			return res.status(400).json({
-				message: error
-			});
-		}
-
-		if (!user) {
-			return res.status(400).json({
-				message: info.message
-			});
-		}
-
-		req.logIn(user, function (error) {
-			if (error) {
+	UserModel.findOne({ email })
+		.then((user) => {
+			if (!user) {
 				return res.status(400).json({
-					message: error
+					message: 'No user found with that email!'
 				});
 			}
 
-			return res.status(200).json({
-				message: info.message,
-				user
+			bcrypt.compare(password, user.password, (error, isMatch) => {
+				if (error) {
+					return res.status(400).json({
+						error
+					});
+				}
+
+				if (isMatch) {
+					jwt.sign({ user }, process.env.JWT_TOKEN_SECRET, (error, token) => {
+
+						if (error) {
+							return res.status(400).json({
+								error
+							});
+						}
+
+						if (token) {
+							return res.status(200).header('auth-token', token).json({
+								message: 'Logged in successfully!',
+								user,
+								token
+							});
+						}
+					});
+				} else {
+					return res.status(400).json({
+						message: 'Incorrect password!'
+					});
+				}
+			});
+		})
+		.catch((error) => {
+			return res.status(400).json({
+				message: error
 			});
 		});
-	})(req, res, next);
 }
 
 // POST a new user
@@ -77,9 +94,9 @@ exports.register = (req, res) => {
 	}
 
 	/* if (password != confirm_password) {
-		return res.status(400).json({
-			message: 'Passwords don\'t match'
-		});
+	return res.status(400).json({
+	message: 'Passwords don\'t match'
+	});
 	} */
 
 	UserModel.findOne({ email })
@@ -105,8 +122,6 @@ exports.register = (req, res) => {
 						newUser.password = hash;
 						newUser.save()
 							.then((user) => {
-								req.flash('success_msg', 'You are now registered!');
-
 								// Create new wishlist for user upon signup
 								const wishlist = new WishlistModel({
 									_id: user.id,
@@ -176,7 +191,7 @@ exports.delete = (req, res) => {
 	UserModel.findByIdAndDelete(id)
 		.then((response) => {
 			if (response) {
-				
+
 				// Delete the wishlist along with the user
 				WishlistModel.findByIdAndDelete(id, (error, deleted) => {
 					if (error) {

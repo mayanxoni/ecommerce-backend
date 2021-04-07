@@ -2,7 +2,7 @@ const WishlistModel = require('../models/wishlist.model')
 const ObjectId = require('mongodb').ObjectId;
 
 
-// GET wishlist created by a user
+// GET wishlist of a user
 exports.get = (req, res) => {
 	if (req.query.id) {
 		const id = req.query.id;
