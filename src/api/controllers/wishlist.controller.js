@@ -1,4 +1,5 @@
 const WishlistModel = require('../models/wishlist.model')
+const ProductModel = require('../models/product.model');
 const ObjectId = require('mongodb').ObjectId;
 
 
@@ -13,15 +14,33 @@ exports.get = (req, res) => {
 						message: 'Sorry, wishlist not found!'
 					});
 				} else {
+					const wishlistData = [];
+					const products = list.products;
+
+					products.forEach((product) => {
+						console.log('xyz');
+						ProductModel.findById(product._id)
+							.then((productDetails) => {
+								console.log('sdfsdf');
+								wishlistData.push(productDetails);
+							})
+							.catch(() => {
+								return res.status(404).send({
+									message: 'This product does not exist!'
+								});
+							});
+					});
+					console.log('123');
 					return res.status(200).json({
 						message: 'Wishlist found!',
-						list
+						wishlistData
 					});
 				}
 			})
-			.catch(() => {
+			.catch((error) => {
 				return res.status(404).json({
-					message: 'This wishlist does not exist!'
+					message: 'This wishlist does not exist!',
+					error
 				});
 			});
 	} else {
