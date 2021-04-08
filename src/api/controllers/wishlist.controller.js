@@ -4,61 +4,28 @@ const ObjectId = require('mongodb').ObjectId;
 
 
 // GET wishlist of a user
-exports.get = (req, res) => {
+exports.get = async (req, res) => {
 	if (req.query.id) {
 		const id = req.query.id;
-		WishlistModel.findById(id)
-			.then((list) => {
-				if (!list) {
-					return res.status(404).json({
-						message: 'Sorry, wishlist not found!'
-					});
-				} else {
-					const wishlistData = [];
-					const products = list.products;
-
-					products.forEach((product) => {
-						console.log('xyz');
-						ProductModel.findById(product._id)
-							.then((productDetails) => {
-								console.log('sdfsdf');
-								wishlistData.push(productDetails);
-							})
-							.catch(() => {
-								return res.status(404).send({
-									message: 'This product does not exist!'
-								});
-							});
-					});
-					console.log('123');
-					return res.status(200).json({
-						message: 'Wishlist found!',
-						wishlistData
-					});
-				}
-			})
-			.catch((error) => {
-				return res.status(404).json({
-					message: 'This wishlist does not exist!',
-					error
-				});
+		const wishList = await WishlistModel.findById(id)
+		if (!wishList) {
+			return res.status(404).json({
+				message: 'Sorry, wishlist not found!'
 			});
-	} else {
-		WishlistModel.find()
-			.then((data) => {
-				if (data.length) {
-					return res.status(200).send(data);
-				} else {
-					return res.status(200).json({
-						message: 'Currently no wishlists are available for the user!'
-					});
-				}
-			})
-			.catch((error) => {
-				return res.status(500).send({
-					message: error.message
-				});
+		} else {
+			const products = wishList.products;
+			let wishlistData = [];
+			wishlistData = await Promise.all(
+				products.map(async (product) => {
+					let data = await ProductModel.findById(product._id);
+					return data;
+				})
+			);
+			return res.status(200).json({
+				message: 'Wishlist found!',
+				wishlistData
 			});
+		}
 	}
 }
 
