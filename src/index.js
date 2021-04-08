@@ -3,6 +3,7 @@ const express = require('express');
 const connectDB = require('./api/config/db.config');
 const cors = require('cors');
 const authMiddleware = require('./api/middlewares/auth.middleware');
+const morgan = require('morgan')
 
 const PORT = process.env.PORT || 8000;
 const app = express();
@@ -14,6 +15,19 @@ connectDB();
 app.use(express.urlencoded({
 	extended: false
 }));
+
+// Logging
+app.use(morgan(
+	(tokens, req, res) =>  {
+		return [
+			tokens.method(req, res),
+			tokens.url(req, res),
+			tokens.status(req, res),
+			tokens.res(req, res, 'content-length'), '-',
+			tokens['response-time'](req, res), 'ms'
+		].join(' ');
+	}
+));
 
 // CORS
 app.use(cors());

@@ -33,7 +33,7 @@ exports.login = (req, res, next) => {
 			bcrypt.compare(password, user.password, (error, isMatch) => {
 				if (error) {
 					return res.status(400).json({
-						error
+						error: 'Incorrect password!'
 					});
 				}
 
@@ -42,7 +42,7 @@ exports.login = (req, res, next) => {
 
 						if (error) {
 							return res.status(400).json({
-								error
+								error: 'Token generation failed!'
 							});
 						}
 
@@ -53,10 +53,6 @@ exports.login = (req, res, next) => {
 								token
 							});
 						}
-					});
-				} else {
-					return res.status(400).json({
-						message: 'Incorrect password!'
 					});
 				}
 			});
