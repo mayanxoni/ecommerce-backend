@@ -26,6 +26,22 @@ exports.get = async (req, res) => {
 				wishlistData
 			});
 		}
+	} else {
+		WishlistModel.find()
+			.then((data) => {
+				if (data.length) {
+					return res.status(200).send(data);
+				} else {
+					return res.status(200).json({
+						message: 'Currently no wishlists are available for the user!'
+					});
+				}
+			})
+			.catch((error) => {
+				return res.status(500).send({
+					message: error.message
+				});
+			});
 	}
 }
 
